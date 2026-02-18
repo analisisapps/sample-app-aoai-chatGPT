@@ -35,11 +35,11 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
 
   
   try {
-    const response = await fetch('https://analisisappsmx.eastus2.inference.ml.azure.com/score', {
+    const response = await fetch('${endpoint}/score', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer 7jWf92QpyPABN0mTn7FRWpJaGqFhHBSCdBqHTbTxuvj82NUOxaeAJQQJ99CAAAAAAAAAAAAAINFRAZML1hc3'  // ← replace with your real key
+        'Authorization': authKey  // ← replace with your real key
       },
       body: JSON.stringify({
         chat_input: userMessage,  // the latest user message
