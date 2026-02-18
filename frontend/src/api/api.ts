@@ -19,7 +19,21 @@ import { ChatMessage, Conversation, ConversationRequest, CosmosDBHealth, CosmosD
 
 export async function conversationApi(options: ConversationRequest, abortSignal: AbortSignal): Promise<Response> {
   const userMessage = options.messages[options.messages.length - 1]?.content || '';
+  
+  const endpoint = import.meta.env.VITE_PROMPT_FLOW_ENDPOINT;
+  const authKey = import.meta.env.VITE_PROMPT_FLOW_KEY;
 
+  // Optional fallback if env vars are missing (for safety during dev)
+  if (!endpoint || !authKey) {
+    console.error('Missing env vars: VITE_PROMPT_FLOW_ENDPOINT or VITE_PROMPT_FLOW_KEY');
+    return new Response(JSON.stringify({ error: 'Configuration error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+
+  
   try {
     const response = await fetch('https://analisisappsmx.eastus2.inference.ml.azure.com/score', {
       method: 'POST',
