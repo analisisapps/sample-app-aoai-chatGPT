@@ -38,7 +38,7 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
 
   
   /*try {*/
-    const response = await fetch('${endpointPF}/score', {
+    const response = await fetch('https://analisisappsmx.eastus2.inference.ml.azure.com/score', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
