@@ -20,11 +20,11 @@ import { ChatMessage, Conversation, ConversationRequest, CosmosDBHealth, CosmosD
 export async function conversationApi(options: ConversationRequest, abortSignal: AbortSignal): Promise<Response> {
   const userMessage = options.messages[options.messages.length - 1]?.content || '';
   
-  /*const endpoint = import.meta.env.VITE_PROMPT_FLOW_ENDPOINT;
-  const authKey = import.meta.env.VITE_PROMPT_FLOW_KEY;*/
+  const endpoint = import.meta.env.VITE_PROMPT_FLOW_ENDPOINT;
+  const authKey = import.meta.env.VITE_PROMPT_FLOW_KEY;
 
-  const endpointPF ="https://analisisappsmx.eastus2.inference.ml.azure.com";
-  const authKey ="Bearer 7jWf92QpyPABN0mTn7FRWpJaGqFhHBSCdBqHTbTxuvj82NUOxaeAJQQJ99CAAAAAAAAAAAAAINFRAZML1hc3";
+  /*const endpointPF ="https://analisisappsmx.eastus2.inference.ml.azure.com";
+  const authKey ="Bearer 7jWf92QpyPABN0mTn7FRWpJaGqFhHBSCdBqHTbTxuvj82NUOxaeAJQQJ99CAAAAAAAAAAAAAINFRAZML1hc3";*/
 
   // Optional fallback if env vars are missing (for safety during dev)
   if (!endpointPF || !authKey) {
