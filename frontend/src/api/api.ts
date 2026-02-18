@@ -34,7 +34,7 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
 
 
   
-  try {
+  /*try {*/
     const response = await fetch('${endpoint}/score', {
       method: 'POST',
       headers: {
@@ -53,14 +53,14 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
     });
 
     return response;
-  } catch (error) {
+  /*} catch (error) {
     console.error('Prompt Flow call failed:', error);
     // Return a fake error response so the UI can handle it
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
-  }
+  }*/
 }
 
 export async function getUserInfo(): Promise<UserInfo[]> {
