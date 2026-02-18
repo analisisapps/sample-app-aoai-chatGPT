@@ -23,11 +23,11 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
   const endpoint = import.meta.env.VITE_PROMPT_FLOW_ENDPOINT;
   const authKey = import.meta.env.VITE_PROMPT_FLOW_KEY;
 
-  /*const endpointPF ="https://analisisappsmx.eastus2.inference.ml.azure.com";
+  /*const endpoint ="https://analisisappsmx.eastus2.inference.ml.azure.com";
   const authKey ="Bearer 7jWf92QpyPABN0mTn7FRWpJaGqFhHBSCdBqHTbTxuvj82NUOxaeAJQQJ99CAAAAAAAAAAAAAINFRAZML1hc3";*/
 
   // Optional fallback if env vars are missing (for safety during dev)
-  if (!endpointPF || !authKey) {
+  if (!endpoint || !authKey) {
     console.error('Missing env vars: VITE_PROMPT_FLOW_ENDPOINT or VITE_PROMPT_FLOW_KEY');
     return new Response(JSON.stringify({ error: 'Configuration error' }), {
       status: 500,
