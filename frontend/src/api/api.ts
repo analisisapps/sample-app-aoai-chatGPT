@@ -2,7 +2,7 @@ import { chatHistorySampleData } from '../constants/chatHistory'
 
 import { ChatMessage, Conversation, ConversationRequest, CosmosDBHealth, CosmosDBStatus, UserInfo } from './models'
 
-export async function conversationApi(options: ConversationRequest, abortSignal: AbortSignal): Promise<Response> {
+/*export async function conversationApi(options: ConversationRequest, abortSignal: AbortSignal): Promise<Response> {
   const response = await fetch('/conversation', {
     method: 'POST',
     headers: {
@@ -15,6 +15,38 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
   })
 
   return response
+}*/
+
+export async function conversationApi(options: ConversationRequest, abortSignal: AbortSignal): Promise<Response> {
+  const userMessage = options.messages[options.messages.length - 1]?.content || '';
+
+  try {
+    const response = await fetch('https://analisisappsmx.eastus2.inference.ml.azure.com/score', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 7jWf92QpyPABN0mTn7FRWpJaGqFhHBSCdBqHTbTxuvj82NUOxaeAJQQJ99CAAAAAAAAAAAAAINFRAZML1hc3'  // ← replace with your real key
+      },
+      body: JSON.stringify({
+        chat_input: userMessage,  // the latest user message
+        chat_history: options.messages.map(m => ({
+          role: m.role,
+          content: m.content
+        })),
+        app_name: 'Click4Assistance'  // hardcoded for now – will make dynamic later
+      }),
+      signal: abortSignal
+    });
+
+    return response;
+  } catch (error) {
+    console.error('Prompt Flow call failed:', error);
+    // Return a fake error response so the UI can handle it
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
 }
 
 export async function getUserInfo(): Promise<UserInfo[]> {
