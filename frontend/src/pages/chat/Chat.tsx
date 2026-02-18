@@ -83,7 +83,7 @@ const Chat = () => {
   const [ASSISTANT, TOOL, ERROR] = ['assistant', 'tool', 'error']
   const NO_CONTENT_ERROR = 'No content in messages object.'
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (
       appStateContext?.state.isCosmosDBAvailable?.status !== CosmosDBStatus.Working &&
       appStateContext?.state.isCosmosDBAvailable?.status !== CosmosDBStatus.NotConfigured &&
@@ -97,7 +97,15 @@ const Chat = () => {
       })
       toggleErrorDialog()
     }
-  }, [appStateContext?.state.isCosmosDBAvailable])
+  }, [appStateContext?.state.isCosmosDBAvailable])*/
+/*Se comenta la validación de CosmoDB porque no lo estoy utilizando*/
+  // At the top of Chat.tsx, in the component
+useEffect(() => {
+  appStateContext?.dispatch({
+    type: 'SET_COSMOSDB_STATUS',
+    payload: { cosmosDB: false, status: CosmosDBStatus.NotConfigured }
+  });
+}, [appStateContext]);
 
   const handleErrorDialogClose = () => {
     toggleErrorDialog()
