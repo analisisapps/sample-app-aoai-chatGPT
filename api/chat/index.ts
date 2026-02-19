@@ -72,6 +72,6 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
 export default httpTrigger;
 
 // This is the trigger config (SWA needs it to recognize the function)
-httpTrigger.methods = ['post', 'options'];
+/*httpTrigger.methods = ['post', 'options'];
 httpTrigger.route = 'chat';
-httpTrigger.authLevel = 'anonymous';
+httpTrigger.authLevel = 'anonymous';*/
