@@ -33,10 +33,8 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
     });
   }
 
-
-  
-  /*try {*/
-    const response = await fetch('https://analisisappsmx.eastus2.inference.ml.azure.com/score', {
+    /*Failes due to CORS*/
+    /*const response = await fetch('https://analisisappsmx.eastus2.inference.ml.azure.com/score', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,17 +49,22 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
         app_name: 'Click4Assistance'  // hardcoded for now – will make dynamic later
       }),
       signal: abortSignal
-    });
+    });*/
+
+  /* Simple proxy workaround*/
+  const response = await fetch('/api/chat', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    chat_input: userMessage,
+    chat_history: options.messages.map(m => ({ role: m.role, content: m.content })),
+    app_name: 'Click4Assistance'
+  }),
+  signal: abortSignal
+});
 
     return response;
-  /*} catch (error) {
-    console.error('Prompt Flow call failed:', error);
-    // Return a fake error response so the UI can handle it
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }*/
+
 }
 
 export async function getUserInfo(): Promise<UserInfo[]> {
