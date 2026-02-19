@@ -34,7 +34,7 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
   }
 
     /*Failes due to CORS*/
-    /*const response = await fetch('https://analisisappsmx.eastus2.inference.ml.azure.com/score', {
+    /*const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
