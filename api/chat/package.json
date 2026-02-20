@@ -1,0 +1,14 @@
+{
+  "name": "chat-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "func start"
+  },
+  "dependencies": {
+    "@azure/functions": "^4.5.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
