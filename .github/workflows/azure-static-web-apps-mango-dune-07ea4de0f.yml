@@ -32,7 +32,7 @@ jobs:
           api_location: "api" # Api source code path - optional
           output_location: "dist" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
-      env:
+        env:
           VITE_PROMPT_FLOW_ENDPOINT: ${{ secrets.VITE_PROMPT_FLOW_ENDPOINT }}
           VITE_PROMPT_FLOW_KEY: ${{ secrets.VITE_PROMPT_FLOW_KEY }}
   close_pull_request_job:
@@ -46,4 +46,5 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_DUNE_07EA4DE0F }}
           action: "close"
+
 
