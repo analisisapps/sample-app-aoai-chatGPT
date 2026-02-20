@@ -31,8 +31,10 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
 
   try {
 
-  const endpoint = import.meta.env.VITE_PROMPT_FLOW_ENDPOINT;
-  const authKey = import.meta.env.VITE_PROMPT_FLOW_KEY;
+  /*const endpoint = import.meta.env.VITE_PROMPT_FLOW_ENDPOINT;
+  const authKey = import.meta.env.VITE_PROMPT_FLOW_KEY;*/
+    const endpoint = process.env.VITE_PROMPT_FLOW_ENDPOINT;
+  const authKey = process.env.VITE_PROMPT_FLOW_KEY;
 
     // Optional fallback if env vars are missing (for safety during dev)
   if (!endpoint || !authKey) {
@@ -43,7 +45,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     });
   }
     
-    const pfResponse = await fetch('https://analisisappsmx.eastus2.inference.ml.azure.com/score', {
+    const pfResponse = await fetch(`${endpoint}/score`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
