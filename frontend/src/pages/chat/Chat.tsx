@@ -937,7 +937,7 @@ useEffect(() => {
                     <div className={styles.chatMessageGpt}>
                       <Answer
                         answer={{
-                          answer: "Generating answer...",
+                          answer: "Generando respuesta...",
                           citations: [],
                           generated_chart: null
                         }}
