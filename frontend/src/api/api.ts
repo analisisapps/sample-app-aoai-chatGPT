@@ -17,7 +17,7 @@ import { ChatMessage, Conversation, ConversationRequest, CosmosDBHealth, CosmosD
   return response
 }*/
 
-export async function conversationApi(options: ConversationRequest, abortSignal: AbortSignal): Promise<Response> {
+export async function conversationApi(options: ConversationRequest, abortSignal: AbortSignal, appName:string): Promise<Response> {
   const userMessage = options.messages[options.messages.length - 1]?.content || '';
 
   /*Failes due to CORS*/
@@ -61,7 +61,7 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
   body: JSON.stringify({
     chat_input: userMessage,
     chat_history: options.messages.map(m => ({ role: m.role, content: m.content })),
-    app_name: 'Click4Assistance'
+    app_name: appName
   }),
   signal: abortSignal
 });
