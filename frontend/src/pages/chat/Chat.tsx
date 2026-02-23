@@ -125,7 +125,7 @@ useEffect(() => {
   }, [appStateContext?.state.chatHistoryLoadingState])
 
   const getUserInfoList = async () => {
-    if (!AUTH_ENABLED) {
+   /* if (!AUTH_ENABLED) {
       setShowAuthMessage(false)
       return
     }
@@ -135,7 +135,7 @@ useEffect(() => {
     } else {
       setShowAuthMessage(false)
     }
-  }
+  }*/
 
   let assistantMessage = {} as ChatMessage
   let toolMessage = {} as ChatMessage
@@ -701,9 +701,9 @@ useEffect(() => {
     }
   }, [processMessages])
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (AUTH_ENABLED !== undefined) getUserInfoList()
-  }, [AUTH_ENABLED])
+  }, [AUTH_ENABLED])*/
 
   useLayoutEffect(() => {
     chatMessageStreamEnd.current?.scrollIntoView({ behavior: 'smooth' })
@@ -1040,8 +1040,8 @@ useEffect(() => {
               </Stack>
             </Stack.Item>
           )}
-          {appStateContext?.state.isChatHistoryOpen &&
-            appStateContext?.state.isCosmosDBAvailable?.status !== CosmosDBStatus.NotConfigured && <ChatHistoryPanel />}
+          {/* Disabled history panel */}
+          {/* <ChatHistoryPanel /> */}
         </Stack>
       )}
     </div>
