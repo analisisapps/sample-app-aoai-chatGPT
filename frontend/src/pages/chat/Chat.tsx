@@ -647,13 +647,18 @@ useEffect(() => {
     setIsLoading(false)
   }
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (appStateContext?.state.currentChat) {
       setMessages(appStateContext.state.currentChat.messages)
     } else {
       setMessages([])
     }
-  }, [appStateContext?.state.currentChat])
+  }, [appStateContext?.state.currentChat])*/
+
+  useEffect(() => {
+  // Desactivamos la sincronización con currentChat porque no usamos historial backend
+  // Los mensajes se mantienen solo en el estado local (in-memory)
+}, [appStateContext?.state.currentChat]);
 
 
   
