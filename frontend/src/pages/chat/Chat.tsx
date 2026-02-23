@@ -124,7 +124,7 @@ useEffect(() => {
     setIsLoading(appStateContext?.state.chatHistoryLoadingState === ChatHistoryLoadingState.Loading)
   }, [appStateContext?.state.chatHistoryLoadingState])
 
-  const getUserInfoList = async () => {
+  /*const getUserInfoList = async () => {
     if (!AUTH_ENABLED) {
       setShowAuthMessage(false)
       return
@@ -135,7 +135,10 @@ useEffect(() => {
     } else {
       setShowAuthMessage(false)
     }
-  }
+  }*/
+  const getUserInfoList = async () => {
+  setShowAuthMessage(false); // Force no auth message
+}
 
   let assistantMessage = {} as ChatMessage
   let toolMessage = {} as ChatMessage
@@ -542,7 +545,7 @@ useEffect(() => {
     return abortController.abort()
   }
 
-  const clearChat = async () => {
+  /*const clearChat = async () => {
     setClearingChat(true)
     if (appStateContext?.state.currentChat?.id && appStateContext?.state.isCosmosDBAvailable.cosmosDB) {
       let response = await historyClear(appStateContext?.state.currentChat.id)
@@ -565,7 +568,13 @@ useEffect(() => {
       }
     }
     setClearingChat(false)
-  }
+  }*/
+
+  const clearChat = () => {
+  setClearingChat(true)
+  setMessages([]);
+  setClearingChat(false)
+}
 
   const tryGetRaiPrettyError = (errorMessage: string) => {
     try {
@@ -646,7 +655,9 @@ useEffect(() => {
     }
   }, [appStateContext?.state.currentChat])
 
-  useLayoutEffect(() => {
+
+  
+  /*useLayoutEffect(() => {
     const saveToDB = async (messages: ChatMessage[], id: string) => {
       const response = await historyUpdate(messages, id)
       return response
@@ -699,7 +710,12 @@ useEffect(() => {
       setMessages(appStateContext.state.currentChat.messages)
       setProcessMessages(messageStatus.NotRunning)
     }
-  }, [processMessages])
+  }, [processMessages])*/
+
+  useLayoutEffect(() => {
+  // Disabled history update - no backend
+  setProcessMessages(messageStatus.NotRunning);
+}, [processMessages]);
 
   /*useEffect(() => {
     if (AUTH_ENABLED !== undefined) getUserInfoList()
@@ -941,13 +957,14 @@ useEffect(() => {
               </Stack>
               <QuestionInput
                 clearOnSend
-                placeholder="Type a new question..."
+                placeholder="Escribe una pregunta..."
                 disabled={isLoading}
-                onSend={(question, id) => {
+                /*onSend={(question, id) => {
                   appStateContext?.state.isCosmosDBAvailable?.cosmosDB
                     ? makeApiRequestWithCosmosDB(question, id)
                     : makeApiRequestWithoutCosmosDB(question, id)
-                }}
+                }}*/
+                onSend={(question, id) => makeApiRequestWithoutCosmosDB(question, id)}
                 conversationId={
                   appStateContext?.state.currentChat?.id ? appStateContext?.state.currentChat?.id : undefined
                 }
@@ -1047,5 +1064,8 @@ useEffect(() => {
     </div>
   )
 }
-
+/* Se comentó arriba por Disabled history panel.
+{appStateContext?.state.isChatHistoryOpen &&
+  appStateContext?.state.isCosmosDBAvailable?.status !== CosmosDBStatus.NotConfigured && <ChatHistoryPanel />}
+*/
 export default Chat
