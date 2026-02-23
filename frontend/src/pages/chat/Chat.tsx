@@ -362,16 +362,25 @@ useEffect(() => {
     };
 
     setMessages(prev => [...prev, assistantMessage]);
-  } catch (e) {
-    console.error('Error in makeApiRequestWithoutCosmosDB:', e);
-    const errorMessage = e.message || 'Error desconocido';
-    const errorChatMsg: ChatMessage = {
-      id: uuid(),
-      role: 'error',
-      content: `Error: ${errorMessage}`,
-      date: new Date().toISOString()
-    };
-    setMessages(prev => [...prev, errorChatMsg]);
+  } catch (e: unknown) {
+  console.error('Error in makeApiRequestWithoutCosmosDB:', e);
+
+  let errorMessage = 'An error occurred. Please try again.';
+  if (e instanceof Error) {
+    errorMessage = e.message;
+  } else if (typeof e === 'string') {
+    errorMessage = e;
+  }
+
+  const errorChatMsg: ChatMessage = {
+    id: uuid(),
+    role: ERROR,
+    content: errorMessage,
+    date: new Date().toISOString()
+  };
+
+  // Add error message to local state only (no Cosmos / conversation)
+  setMessages(prev => [...prev, errorChatMsg]);
   } finally {
     setIsLoading(false);
     setShowLoadingMessage(false);
