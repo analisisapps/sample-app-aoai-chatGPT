@@ -88,7 +88,7 @@ export const fetchChatHistoryInit = (): Conversation[] | null => {
   return chatHistorySampleData
 }
 
-export const historyList = async (offset = 0): Promise<Conversation[] | null> => {
+/*export const historyList = async (offset = 0): Promise<Conversation[] | null> => {
   const response = await fetch(`/history/list?offset=${offset}`, {
     method: 'GET'
   })
@@ -126,9 +126,13 @@ export const historyList = async (offset = 0): Promise<Conversation[] | null> =>
     })
 
   return response
-}
+}*/
+export const historyList = async (offset = 0): Promise<Conversation[] | null> => {
+  // await fetch('/history/list?offset=${offset}')
+  return []; // Mock: no history
+};
 
-export const historyRead = async (convId: string): Promise<ChatMessage[]> => {
+/*export const historyRead = async (convId: string): Promise<ChatMessage[]> => {
   const response = await fetch('/history/read', {
     method: 'POST',
     body: JSON.stringify({
@@ -163,9 +167,12 @@ export const historyRead = async (convId: string): Promise<ChatMessage[]> => {
       return []
     })
   return response
-}
-
-export const historyGenerate = async (
+}*/
+export const historyRead = async (convId: string): Promise<ChatMessage[]> => {
+  // await fetch('/history/read')
+  return []; // Mock: no messages
+};
+/*export const historyGenerate = async (
   options: ConversationRequest,
   abortSignal: AbortSignal,
   convId?: string
@@ -197,9 +204,18 @@ export const historyGenerate = async (
       return new Response()
     })
   return response
-}
+}*/
 
-export const historyUpdate = async (messages: ChatMessage[], convId: string): Promise<Response> => {
+export const historyGenerate = async (
+  options: ConversationRequest,
+  abortSignal: AbortSignal,
+  convId?: string
+): Promise<Response> => {
+  // await fetch('/history/generate')
+  return new Response(JSON.stringify({}), { status: 200 }); // Mock success
+};
+
+/*export const historyUpdate = async (messages: ChatMessage[], convId: string): Promise<Response> => {
   const response = await fetch('/history/update', {
     method: 'POST',
     body: JSON.stringify({
@@ -223,9 +239,13 @@ export const historyUpdate = async (messages: ChatMessage[], convId: string): Pr
       return errRes
     })
   return response
-}
+}*/
+export const historyUpdate = async (messages: ChatMessage[], convId: string): Promise<Response> => {
+  // await fetch('/history/update')
+  return new Response(JSON.stringify({}), { status: 200 });
+};
 
-export const historyDelete = async (convId: string): Promise<Response> => {
+/*export const historyDelete = async (convId: string): Promise<Response> => {
   const response = await fetch('/history/delete', {
     method: 'DELETE',
     body: JSON.stringify({
@@ -248,9 +268,12 @@ export const historyDelete = async (convId: string): Promise<Response> => {
       return errRes
     })
   return response
-}
+}*/
+export const historyDelete = async (convId: string): Promise<Response> => {
+  return new Response(JSON.stringify({}), { status: 200 });
+};
 
-export const historyDeleteAll = async (): Promise<Response> => {
+/*export const historyDeleteAll = async (): Promise<Response> => {
   const response = await fetch('/history/delete_all', {
     method: 'DELETE',
     body: JSON.stringify({}),
@@ -271,9 +294,12 @@ export const historyDeleteAll = async (): Promise<Response> => {
       return errRes
     })
   return response
-}
+}*/
+export const historyDeleteAll = async (): Promise<Response> => {
+  return new Response(JSON.stringify({}), { status: 200 });
+};
 
-export const historyClear = async (convId: string): Promise<Response> => {
+/*export const historyClear = async (convId: string): Promise<Response> => {
   const response = await fetch('/history/clear', {
     method: 'POST',
     body: JSON.stringify({
@@ -296,9 +322,13 @@ export const historyClear = async (convId: string): Promise<Response> => {
       return errRes
     })
   return response
-}
+}*/
+export const historyClear = async (convId: string): Promise<Response> => {
+  // await fetch('/history/clear')
+  return new Response(JSON.stringify({}), { status: 200 });
+};
 
-export const historyRename = async (convId: string, title: string): Promise<Response> => {
+/*export const historyRename = async (convId: string, title: string): Promise<Response> => {
   const response = await fetch('/history/rename', {
     method: 'POST',
     body: JSON.stringify({
@@ -322,9 +352,12 @@ export const historyRename = async (convId: string, title: string): Promise<Resp
       return errRes
     })
   return response
-}
+}*/
+export const historyRename = async (convId: string, title: string): Promise<Response> => {
+  return new Response(JSON.stringify({}), { status: 200 });
+};
 
-export const historyEnsure = async (): Promise<CosmosDBHealth> => {
+/*export const historyEnsure = async (): Promise<CosmosDBHealth> => {
   const response = await fetch('/history/ensure', {
     method: 'GET'
   })
@@ -364,9 +397,12 @@ export const historyEnsure = async (): Promise<CosmosDBHealth> => {
       }
     })
   return response
-}
+}*/
+export const historyEnsure = async (): Promise<CosmosDBHealth> => {
+  return { cosmosDB: false, status: CosmosDBStatus.NotConfigured };
+};
 
-export const frontendSettings = async (): Promise<Response | null> => {
+/*export const frontendSettings = async (): Promise<Response | null> => {
   const response = await fetch('/frontend_settings', {
     method: 'GET'
   })
@@ -379,7 +415,12 @@ export const frontendSettings = async (): Promise<Response | null> => {
     })
 
   return response
-}
+}*/
+export const frontendSettings = async (): Promise<Response | null> => {
+  // await fetch('/frontend_settings')
+  return new Response(JSON.stringify({}), { status: 200 }); // Mock empty settings
+};
+
 export const historyMessageFeedback = async (messageId: string, feedback: string): Promise<Response> => {
   const response = await fetch('/history/message_feedback', {
     method: 'POST',
