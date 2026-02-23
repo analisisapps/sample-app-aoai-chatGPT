@@ -190,7 +190,7 @@ useEffect(() => {
     }
   }
 
-  const makeApiRequestWithoutCosmosDB = async (question: ChatMessage["content"], conversationId?: string) => {
+  /*const makeApiRequestWithoutCosmosDB = async (question: ChatMessage["content"], conversationId?: string) => {
     setIsLoading(true)
     setShowLoadingMessage(true)
     const abortController = new AbortController()
@@ -315,7 +315,70 @@ useEffect(() => {
     }
 
     return abortController.abort()
+  }*/
+
+  const makeApiRequestWithoutCosmosDB = async (question: ChatMessage["content"], conversationId?: string) => {
+  setIsLoading(true);
+  setShowLoadingMessage(true);
+
+  const abortController = new AbortController();
+  abortFuncs.current.unshift(abortController);
+
+  const userMessage: ChatMessage = {
+    id: uuid(),
+    role: 'user',
+    content: question,
+    date: new Date().toISOString()
+  };
+
+  // Agregar mensaje del usuario al estado local
+  setMessages(prev => [...prev, userMessage]);
+
+  try {
+    const response = await conversationApi(
+      { messages: [...messages, userMessage] },
+      abortController.signal
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error ${response.status}: ${errorText}`);
+    }
+
+    const data = await response.json();
+
+    // Extraer la respuesta (ajusta la clave según tu respuesta real)
+    const replyContent = data.chat_output 
+                      || data.answer 
+                      || data.output 
+                      || data.response 
+                      || JSON.stringify(data);  // fallback para debug
+
+    const assistantMessage: ChatMessage = {
+      id: uuid(),
+      role: 'assistant',
+      content: replyContent,
+      date: new Date().toISOString()
+    };
+
+    setMessages(prev => [...prev, assistantMessage]);
+  } catch (e) {
+    console.error('Error in makeApiRequestWithoutCosmosDB:', e);
+    const errorMessage = e.message || 'Error desconocido';
+    const errorChatMsg: ChatMessage = {
+      id: uuid(),
+      role: 'error',
+      content: `Error: ${errorMessage}`,
+      date: new Date().toISOString()
+    };
+    setMessages(prev => [...prev, errorChatMsg]);
+  } finally {
+    setIsLoading(false);
+    setShowLoadingMessage(false);
+    abortFuncs.current = abortFuncs.current.filter(a => a !== abortController);
+    setProcessMessages(messageStatus.Done);
   }
+};
 
   const makeApiRequestWithCosmosDB = async (question: ChatMessage["content"], conversationId?: string) => {
     setIsLoading(true)
