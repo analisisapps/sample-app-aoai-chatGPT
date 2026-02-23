@@ -356,7 +356,8 @@ useEffect(() => {
   try {
     const response = await conversationApi(
       { messages: [...messages, userMessage] },
-      abortController.signal
+      abortController.signal,
+      appName
     );
 
     if (!response.ok) {
