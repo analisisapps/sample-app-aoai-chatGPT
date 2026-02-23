@@ -86,6 +86,12 @@ const Chat = () => {
 
   const [ASSISTANT, TOOL, ERROR] = ['assistant', 'tool', 'error']
   const NO_CONTENT_ERROR = 'No content in messages object.'
+
+/*<RF - Revisión del historial en memoria>*/
+  useEffect(() => {
+  console.log('Historial actual en memoria:', messages);
+}, [messages])
+  /*<RF - Revisión del historial en memoria/>*/
   
   /*<RF - Obtener parámetro desde query string>*/
  useEffect(() => {
