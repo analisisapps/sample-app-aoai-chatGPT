@@ -66,7 +66,12 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
   signal: abortSignal
 });
 
-    return response;
+if (!response.ok) {
+  const errorText = await response.text();
+  throw new Error(`Proxy error ${response.status}: ${errorText}`);
+}
+
+return response;
 
 }
 
