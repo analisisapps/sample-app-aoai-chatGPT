@@ -125,7 +125,7 @@ useEffect(() => {
   }, [appStateContext?.state.chatHistoryLoadingState])
 
   const getUserInfoList = async () => {
-   /* if (!AUTH_ENABLED) {
+    if (!AUTH_ENABLED) {
       setShowAuthMessage(false)
       return
     }
@@ -135,7 +135,7 @@ useEffect(() => {
     } else {
       setShowAuthMessage(false)
     }
-  }*/
+  }
 
   let assistantMessage = {} as ChatMessage
   let toolMessage = {} as ChatMessage
