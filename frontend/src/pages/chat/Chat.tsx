@@ -65,6 +65,10 @@ const Chat = () => {
   const [errorMsg, setErrorMsg] = useState<ErrorMessage | null>()
   const [logo, setLogo] = useState('')
   const [answerId, setAnswerId] = useState<string>('')
+  /*<RF - Agregar appName como variable>*/
+  const [appName, setAppName] = useState('')
+  const [appNameError, setAppNameError] = useState<string | null>(null);
+  /*<RF - Agregar appName como variable/>*/
 
   const errorDialogContentProps = {
     type: DialogType.close,
@@ -82,6 +86,21 @@ const Chat = () => {
 
   const [ASSISTANT, TOOL, ERROR] = ['assistant', 'tool', 'error']
   const NO_CONTENT_ERROR = 'No content in messages object.'
+  
+  /*<RF - Obtener parámetro desde query string>*/
+ useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const appFromUrl = params.get('app_name');
+
+  if (appFromUrl && appFromUrl.trim() !== '') {
+    setAppName(appFromUrl.trim());
+    setAppNameError(null);
+  } else {
+    setAppName('');
+    setAppNameError('Debe especificar app_name en la URL (ejemplo: ?app_name=Click4Assistance)');
+  }
+}, []);
+   /*<RF - Obtener parámetro desde query string/>*/
 
   /*useEffect(() => {
     if (
@@ -950,8 +969,20 @@ useEffect(() => {
                 <div ref={chatMessageStreamEnd} />
               </div>
             )}
-
+            <Stack horizontal verticalAlign="center" tokens={{ childrenGap: 12 }} style={{ padding: '12px 16px 8px 16px' }}>
+              <label style={{ fontWeight: '600', minWidth: '120px' }}>Aplicación:</label>
+              <span style={{ fontWeight: 'bold', color: appName ? '#0078d4' : '#d13438' }}>
+                {appName || 'No especificada en la URL'}
+              </span>
+            </Stack>
+            
+            {appNameError && (
+              <div style={{ color: '#d13438', fontSize: '14px', padding: '0 16px 8px 16px', textAlign: 'left' }}>
+                {appNameError}
+              </div>
+            )}
             <Stack horizontal className={styles.chatInput}>
+        
               {isLoading && messages.length > 0 && (
                 <Stack
                   horizontal
@@ -1035,13 +1066,25 @@ useEffect(() => {
               <QuestionInput
                 clearOnSend
                 placeholder="Escribe una pregunta..."
-                disabled={isLoading}
+                disabled={isLoading || !appName}  // ← desactiva input si no hay app_name
                 /*onSend={(question, id) => {
                   appStateContext?.state.isCosmosDBAvailable?.cosmosDB
                     ? makeApiRequestWithCosmosDB(question, id)
                     : makeApiRequestWithoutCosmosDB(question, id)
                 }}*/
-                onSend={(question, id) => makeApiRequestWithoutCosmosDB(question, id)}
+                /*<RF - Cambio 1 simple>*/
+                /*onSend={(question, id) => makeApiRequestWithoutCosmosDB(question, id)}*/
+                /*<RF - Cambio 1 simple/>*/
+
+                onSend={(question, id) => {
+                  if (!appName || appName.trim() === '') {
+                    setAppNameError('Debe especificar app_name en la URL (ejemplo: ?app_name=Click4Assistance)');
+                    return;
+                  }
+                  setAppNameError(null);
+                  makeApiRequestWithoutCosmosDB(question, id);
+                }}
+                
                 conversationId={
                   appStateContext?.state.currentChat?.id ? appStateContext?.state.currentChat?.id : undefined
                 }
