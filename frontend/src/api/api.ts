@@ -55,6 +55,7 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
     });*/
 
   /* Simple proxy workaround*/
+  console.log('Enviando historial:', options.messages);
   const response = await fetch('/api/chat', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
