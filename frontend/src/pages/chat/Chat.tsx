@@ -175,7 +175,7 @@ const Chat = () => {
 
     forceWelcome();
   }
-}, [appName);
+}, [appName]);
 
   /*useEffect(() => {
     if (
