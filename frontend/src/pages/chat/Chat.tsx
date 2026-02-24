@@ -181,10 +181,10 @@ useEffect(() => {
   let assistantContent = ''
 
    /*<RF - Setear mensaje de Bienvenida/>*/
- useEffect(() => {
+ /*useEffect(() => {
   if (appName && appName.trim() !== '' && messages.length === 0) {
 
-    //Seteo de mensaje simulado
+
     const initialUserMessage: ChatMessage = {
       id: uuid(),
       role: 'user',
@@ -192,10 +192,10 @@ useEffect(() => {
       date: new Date().toISOString()
     };
 
-    //Agegar el mensaje del usuario al estado (para que se vea en el chat)
+  
     setMessages([initialUserMessage]);
     
-    // Forzar llamada automática con "menu" para activar el mensaje de bienvenida
+ 
     const forceWelcome = async () => {
       try {
         const response = await conversationApi(
@@ -208,10 +208,10 @@ useEffect(() => {
 
         const data = await response.json();
 
-        // El mensaje de bienvenida viene en chat_output (o el campo que uses en tu flow)
+       
         const welcomeText = data.chat_output || '¡Bienvenido!';
 
-        // Agregar la respuesta del assistant
+
         setMessages(prev => [
           ...prev,
           {
@@ -237,7 +237,7 @@ useEffect(() => {
 
     forceWelcome();
   }
-}, [appName]);
+}, [appName]);*/
 
   useEffect(() => parseExecResults(execResults), [execResults])
 
