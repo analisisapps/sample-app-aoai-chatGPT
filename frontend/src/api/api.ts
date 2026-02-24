@@ -63,8 +63,42 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
   
   /* Simple proxy workaround*/
   console.log('Historial a enviar...:', options.messages);
+  const pfHistory1 = [];
+  let i = 0;
+while (i < options.messages.length) { //sin -1
+  const msg = options.messages[i];
 
+  if (msg.role === 'user') {
+    const historyItem1: any = {
+      inputs: {
+        chat_input: msg.content
+      },
+      outputs: {}
+    };
 
+    // Si el siguiente mensaje es del assistant se agrega com output
+    if (i + 1 < options.messages.length && options.messages[i + 1].role === 'assistant') {
+      historyItem1.outputs = {
+        chat_output: options.messages[i + 1].content
+      };
+      i += 2; // saltamos el par completo
+    } else {
+      i += 1; // solo user (el mensaje actual pendiente)
+    }
+
+    pfHistory1.push(historyItem1);
+  } else {
+    // Por seguridad: si por algún motivo empieza con assistant, lo saltamos
+    i += 1;
+  }
+}
+
+console.log('pfHistory1 - Enviando historial en formato Prompt Flow:', JSON.stringify({
+    chat_input: userMessage,
+    chat_history: pfHistory1,
+    app_name: appName
+  }))
+  
 // Transformar mensajes al formato nativo de Prompt Flow chat_history
 const pfHistory = [];
   let i = 0;
@@ -96,7 +130,7 @@ while (i < options.messages.length -1) { //-1 para no procesar el último mensaj
   }
 }
 
-  console.log('Enviando historial en formato Prompt Flow:', JSON.stringify({
+  console.log('pfHistory - Enviando historial en formato Prompt Flow:', JSON.stringify({
     chat_input: userMessage,
     chat_history: pfHistory,
     app_name: appName
