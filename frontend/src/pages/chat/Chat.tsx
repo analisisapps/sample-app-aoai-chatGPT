@@ -118,7 +118,69 @@ const Chat = () => {
 }, []);
    /*<RF - Obtener parámetro desde query string/>*/
   
- /*<RF - Setear mensaje de Bienvenida/>*/
+
+  /*useEffect(() => {
+    if (
+      appStateContext?.state.isCosmosDBAvailable?.status !== CosmosDBStatus.Working &&
+      appStateContext?.state.isCosmosDBAvailable?.status !== CosmosDBStatus.NotConfigured &&
+      appStateContext?.state.chatHistoryLoadingState === ChatHistoryLoadingState.Fail &&
+      hideErrorDialog
+    ) {
+      let subtitle = `${appStateContext.state.isCosmosDBAvailable.status}. Please contact the site administrator.`
+      setErrorMsg({
+        title: 'Chat history is not enabled',
+        subtitle: subtitle
+      })
+      toggleErrorDialog()
+    }
+  }, [appStateContext?.state.isCosmosDBAvailable])*/
+/*Se comenta la validación de CosmoDB porque no lo estoy utilizando*/
+  // At the top of Chat.tsx, in the component
+useEffect(() => {
+  appStateContext?.dispatch({
+    type: 'SET_COSMOSDB_STATUS',
+    payload: { cosmosDB: false, status: CosmosDBStatus.NotConfigured }
+  });
+}, [appStateContext]);
+
+  const handleErrorDialogClose = () => {
+    toggleErrorDialog()
+    setTimeout(() => {
+      setErrorMsg(null)
+    }, 500)
+  }
+
+  useEffect(() => {
+    if (!appStateContext?.state.isLoading) {
+      setLogo(ui?.chat_logo || ui?.logo || Contoso)
+    }
+  }, [appStateContext?.state.isLoading])
+
+  useEffect(() => {
+    setIsLoading(appStateContext?.state.chatHistoryLoadingState === ChatHistoryLoadingState.Loading)
+  }, [appStateContext?.state.chatHistoryLoadingState])
+
+  /*const getUserInfoList = async () => {
+    if (!AUTH_ENABLED) {
+      setShowAuthMessage(false)
+      return
+    }
+    const userInfoList = await getUserInfo()
+    if (userInfoList.length === 0 && window.location.hostname !== '127.0.0.1') {
+      setShowAuthMessage(true)
+    } else {
+      setShowAuthMessage(false)
+    }
+  }*/
+  const getUserInfoList = async () => {
+    setShowAuthMessage(false); // Force no auth message
+  }
+
+  let assistantMessage = {} as ChatMessage
+  let toolMessage = {} as ChatMessage
+  let assistantContent = ''
+
+   /*<RF - Setear mensaje de Bienvenida/>*/
  useEffect(() => {
   if (appName && appName.trim() !== '' && messages.length === 0) {
 
@@ -177,67 +239,6 @@ const Chat = () => {
   }
 }, [appName]);
 
-  /*useEffect(() => {
-    if (
-      appStateContext?.state.isCosmosDBAvailable?.status !== CosmosDBStatus.Working &&
-      appStateContext?.state.isCosmosDBAvailable?.status !== CosmosDBStatus.NotConfigured &&
-      appStateContext?.state.chatHistoryLoadingState === ChatHistoryLoadingState.Fail &&
-      hideErrorDialog
-    ) {
-      let subtitle = `${appStateContext.state.isCosmosDBAvailable.status}. Please contact the site administrator.`
-      setErrorMsg({
-        title: 'Chat history is not enabled',
-        subtitle: subtitle
-      })
-      toggleErrorDialog()
-    }
-  }, [appStateContext?.state.isCosmosDBAvailable])*/
-/*Se comenta la validación de CosmoDB porque no lo estoy utilizando*/
-  // At the top of Chat.tsx, in the component
-useEffect(() => {
-  appStateContext?.dispatch({
-    type: 'SET_COSMOSDB_STATUS',
-    payload: { cosmosDB: false, status: CosmosDBStatus.NotConfigured }
-  });
-}, [appStateContext]);
-
-  const handleErrorDialogClose = () => {
-    toggleErrorDialog()
-    setTimeout(() => {
-      setErrorMsg(null)
-    }, 500)
-  }
-
-  useEffect(() => {
-    if (!appStateContext?.state.isLoading) {
-      setLogo(ui?.chat_logo || ui?.logo || Contoso)
-    }
-  }, [appStateContext?.state.isLoading])
-
-  useEffect(() => {
-    setIsLoading(appStateContext?.state.chatHistoryLoadingState === ChatHistoryLoadingState.Loading)
-  }, [appStateContext?.state.chatHistoryLoadingState])
-
-  /*const getUserInfoList = async () => {
-    if (!AUTH_ENABLED) {
-      setShowAuthMessage(false)
-      return
-    }
-    const userInfoList = await getUserInfo()
-    if (userInfoList.length === 0 && window.location.hostname !== '127.0.0.1') {
-      setShowAuthMessage(true)
-    } else {
-      setShowAuthMessage(false)
-    }
-  }*/
-  const getUserInfoList = async () => {
-  setShowAuthMessage(false); // Force no auth message
-}
-
-  let assistantMessage = {} as ChatMessage
-  let toolMessage = {} as ChatMessage
-  let assistantContent = ''
-
   useEffect(() => parseExecResults(execResults), [execResults])
 
   const parseExecResults = (exec_results_: any): void => {
@@ -284,6 +285,8 @@ useEffect(() => {
     }
   }
 
+
+  
   /*const makeApiRequestWithoutCosmosDB = async (question: ChatMessage["content"], conversationId?: string) => {
     setIsLoading(true)
     setShowLoadingMessage(true)
