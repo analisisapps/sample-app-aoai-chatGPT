@@ -18,15 +18,16 @@ import { ChatMessage, Conversation, ConversationRequest, CosmosDBHealth, CosmosD
 }*/
 
 export async function conversationApi(options: ConversationRequest, abortSignal: AbortSignal, appName:string): Promise<Response> {
+  if (!options.messages || options.messages.length === 0) {
+    throw new Error('No messages provided');
+  }
   const userMessage = options.messages[options.messages.length - 1]?.content || '';
 
-  /*Failes due to CORS*/
+  /*Falla por QORS, se suplantó por azure function*/
   /*
   const endpoint = import.meta.env.VITE_PROMPT_FLOW_ENDPOINT;
   const authKey = import.meta.env.VITE_PROMPT_FLOW_KEY;*/
 
-
-  // Optional fallback if env vars are missing (for safety during dev)
   /*
   if (!endpoint || !authKey) {
     console.error('Missing env vars: VITE_PROMPT_FLOW_ENDPOINT or VITE_PROMPT_FLOW_KEY');
@@ -54,11 +55,17 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
       signal: abortSignal
     });*/
 
+  // Truncamiento del historial
+  const MAX_TURNS = 6; // últimos 6 turnos completos (user + assistant)
+
+  // Tomar solo los últimos mensajes posibles
+  const recentMessages = options.messages.slice(-MAX_TURNS * 2);
+  
   /* Simple proxy workaround*/
   console.log('Historial a enviar...:', options.messages);
 
 
-// Transformar messages al formato nativo de Prompt Flow chat_history
+// Transformar mensajes al formato nativo de Prompt Flow chat_history
 const pfHistory = [];
   let i = 0;
 while (i < options.messages.length -1) { //-1 para no procesar el último mensaje solo
