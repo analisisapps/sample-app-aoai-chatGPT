@@ -110,8 +110,32 @@ if (!response.ok) {
   const errorText = await response.text();
   throw new Error(`Proxy error ${response.status}: ${errorText}`);
 }
+const data = await response.json();
+// ───────────────────────────────────────────────
+  // Limpieza del comentario de control
+  // ───────────────────────────────────────────────
+  let cleanedContent = data.answer || data.chat_output || data.output || '';
 
-return response;
+  // Quitar el patrón típico al final
+  cleanedContent = cleanedContent
+    .replace(/<!--\s*\[ACTIVE_CATEGORY\]:[^-->]*-->\s*$/g, '')
+    .replace(/<!--[\s\S]*?-->\s*$/g, '')   // cualquier comentario al final
+    .trim();
+
+  // Devolvemos la respuesta limpia
+  const cleanResponse = {
+    ...data,
+    // Sobreescribimos el campo que devuelve tu flow
+    chat_output: cleanedContent, // si devuelve "chat_output"
+
+  };
+
+  return new Response(JSON.stringify(cleanResponse), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' }
+  });
+  
+//return response;
 
 }
 
