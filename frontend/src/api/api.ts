@@ -21,7 +21,7 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
   if (!options.messages || options.messages.length === 0) {
     throw new Error('No messages provided');
   }
-  const userMessage = options.messages[options.messages.length - 1]?.content || '';
+  
 
   /*Falla por QORS, se suplantó por azure function*/
   /*
@@ -66,7 +66,9 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
   
   
 // Transformar mensajes al formato nativo de Prompt Flow chat_history
-/*const pfHistory = [];
+/*
+const userMessage = options.messages[options.messages.length - 1]?.content || '';
+const pfHistory = [];
   let i = 0;
 while (i < options.messages.length -1) { //-1 para no procesar el último mensaje solo
   const msg = options.messages[i];
