@@ -117,31 +117,65 @@ const Chat = () => {
   }
 }, []);
    /*<RF - Obtener parámetro desde query string/>*/
-
-  useEffect(() => {
+  
+ /*<RF - Setear mensaje de Bienvenida/>*/
+ useEffect(() => {
   if (appName && appName.trim() !== '' && messages.length === 0) {
-    // Mensaje de bienvenida estático (se muestra solo al inicio)
-    const welcomeMessage = {
-      role: 'assistant',
-      content: `¡Hola 'Rafael' : 'bienvenido'}! 👋
 
-Soy tu asistente para analizar aplicativos. Analicemos ${appName}
-
-Para empezar:
-1. Escribe tu pregunta directamente (ej. "¿Tiene protección de datos personales?")
-2. O selecciona una categoría:
-   - **1.** Información General
-   - **2.** Arquitectura de software
-   - **3.** Protección de datos personales
-   - **4.** Triaje AI
-   - **5.** Solo interactuar (preguntas libres)
-
-¿Qué te gustaría saber? 😊`
+    //Seteo de mensaje simulado
+    const initialUserMessage: ChatMessage = {
+      id: uuid(),
+      role: 'user',
+      content: 'menu',
+      date: new Date().toISOString()
     };
 
-    setMessages([welcomeMessage]);
+    //Agegar el mensaje del usuario al estado (para que se vea en el chat)
+    setMessages([initialUserMessage]);
+    
+    // Forzar llamada automática con "menu" para activar el mensaje de bienvenida
+    const forceWelcome = async () => {
+      try {
+        const response = await conversationApi(
+          {
+            messages: [initialUserMessage],
+          },
+          new AbortController().signal,
+          appName
+        );
+
+        const data = await response.json();
+
+        // El mensaje de bienvenida viene en chat_output (o el campo que uses en tu flow)
+        const welcomeText = data.chat_output || '¡Bienvenido!';
+
+        // Agregar la respuesta del assistant
+        setMessages(prev => [
+          ...prev,
+          {
+            id: uuid(),
+            role: 'assistant',
+            content: welcomeText,
+            date: new Date().toISOString()
+          }
+        ]);
+      } catch (err) {
+        console.error('Error al cargar bienvenida:', err);
+        setMessages(prev => [
+          ...prev,
+          {
+            id: uuid(),
+            role: 'assistant',
+            content: '¡Hola! Hubo un error al iniciar. Por favor, escribe tu pregunta.',
+            date: new Date().toISOString()
+          }
+        ]);
+      }
+    };
+
+    forceWelcome();
   }
-}, [appName, messages.length]); // Dependencias: se ejecuta cuando appName esté listo y no haya mensajes
+}, [appName);
 
   /*useEffect(() => {
     if (
