@@ -93,7 +93,11 @@ while (i < options.messages.length) {
   }
 }
 
-  console.log('Enviando historial en formato Prompt Flow:', JSON.stringify(pfHistory, null, 2))
+  console.log('Enviando historial en formato Prompt Flow:', JSON.stringify({
+    chat_input: userMessage,
+    chat_history: pfHistory,
+    app_name: appName
+  }))
   const response = await fetch('/api/chat', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
