@@ -61,24 +61,20 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
 // Transformar messages al formato nativo de Prompt Flow chat_history
 const pfHistory = [];
   let i = 0;
-while (i < options.messages.length) {
+while (i < options.messages.length -1) { //-1 para no procesar el último mensaje solo
   const msg = options.messages[i];
 
   if (msg.role === 'user') {
     const historyItem: any = {
       inputs: {
-        // Usa 'chat_input' si tu flow lo espera así
-        // Si en tu flow el input se llama 'question' → cámbialo a 'question'
         chat_input: msg.content
       },
       outputs: {}
     };
 
-    // Si el siguiente mensaje es del assistant → lo agregamos como output
+    // Si el siguiente mensaje es del assistant se agrega com output
     if (i + 1 < options.messages.length && options.messages[i + 1].role === 'assistant') {
       historyItem.outputs = {
-        // Usa 'answer' si tu LLM node devuelve 'answer'
-        // Si se llama 'reply', 'output' u otro nombre → cámbialo aquí
         chat_output: options.messages[i + 1].content
       };
       i += 2; // saltamos el par completo
