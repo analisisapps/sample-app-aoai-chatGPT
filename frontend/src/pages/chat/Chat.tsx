@@ -118,6 +118,31 @@ const Chat = () => {
 }, []);
    /*<RF - Obtener parámetro desde query string/>*/
 
+  useEffect(() => {
+  if (appName && appName.trim() !== '' && messages.length === 0) {
+    // Mensaje de bienvenida estático (se muestra solo al inicio)
+    const welcomeMessage = {
+      role: 'assistant',
+      content: `¡Hola 'Rafael' : 'bienvenido'}! 👋
+
+Soy tu asistente para analizar aplicativos. Analicemos ${appName}
+
+Para empezar:
+1. Escribe tu pregunta directamente (ej. "¿Tiene protección de datos personales?")
+2. O selecciona una categoría:
+   - **1.** Información General
+   - **2.** Arquitectura de software
+   - **3.** Protección de datos personales
+   - **4.** Triaje AI
+   - **5.** Solo interactuar (preguntas libres)
+
+¿Qué te gustaría saber? 😊`
+    };
+
+    setMessages([welcomeMessage]);
+  }
+}, [appName, messages.length]); // Dependencias: se ejecuta cuando appName esté listo y no haya mensajes
+
   /*useEffect(() => {
     if (
       appStateContext?.state.isCosmosDBAvailable?.status !== CosmosDBStatus.Working &&
