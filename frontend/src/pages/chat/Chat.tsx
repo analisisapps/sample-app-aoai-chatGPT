@@ -70,6 +70,16 @@ const Chat = () => {
   const [appNameError, setAppNameError] = useState<string | null>(null);
   /*<RF - Agregar appName como variable/>*/
 
+  /*<RF - Código para limpiar en mensaje output>*/
+  const cleanAssistantContent = (content: string): string => {
+  if (!content) return '';
+  return content
+    .replace(/<!--\s*\[ACTIVE_CATEGORY\]:[^-->]*-->\s*$/gi, '')
+    .replace(/<!--[\s\S]*?-->\s*$/g, '')
+    .trim();
+  };
+   /*<RF - Código para limpiar en mensaje output/>*/
+  
   const errorDialogContentProps = {
     type: DialogType.close,
     title: errorMsg?.title,
@@ -936,7 +946,7 @@ useEffect(() => {
                       <div className={styles.chatMessageGpt}>
                         {typeof answer.content === "string" && <Answer
                           answer={{
-                            answer: answer.content,
+                            answer: cleanAssistantContent(answer.content),//<RF - Limpieza quitando el ACTIVE CATEGORY>
                             citations: parseCitationFromMessage(messages[index - 1]),
                             generated_chart: parsePlotFromMessage(messages[index - 1]),
                             message_id: answer.id,
