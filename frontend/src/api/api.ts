@@ -55,13 +55,52 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
     });*/
 
   /* Simple proxy workaround*/
-  console.log('Enviando historial:', options.messages);
+  console.log('Historial a enviar...:', options.messages);
+
+
+// Transformar messages al formato nativo de Prompt Flow chat_history
+const pfHistory = [];
+  let i = 0;
+while (i < options.messages.length) {
+  const msg = options.messages[i];
+
+  if (msg.role === 'user') {
+    const historyItem: any = {
+      inputs: {
+        // Usa 'chat_input' si tu flow lo espera así
+        // Si en tu flow el input se llama 'question' → cámbialo a 'question'
+        chat_input: msg.content
+      },
+      outputs: {}
+    };
+
+    // Si el siguiente mensaje es del assistant → lo agregamos como output
+    if (i + 1 < options.messages.length && options.messages[i + 1].role === 'assistant') {
+      historyItem.outputs = {
+        // Usa 'answer' si tu LLM node devuelve 'answer'
+        // Si se llama 'reply', 'output' u otro nombre → cámbialo aquí
+        chat_output: options.messages[i + 1].content
+      };
+      i += 2; // saltamos el par completo
+    } else {
+      i += 1; // solo user (el mensaje actual pendiente)
+    }
+
+    pfHistory.push(historyItem);
+  } else {
+    // Por seguridad: si por algún motivo empieza con assistant, lo saltamos
+    i += 1;
+  }
+}
+
+  console.log('Enviando historial en formato Prompt Flow:', JSON.stringify(pfHistory, null, 2))
   const response = await fetch('/api/chat', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     chat_input: userMessage,
-    chat_history: options.messages.map(m => ({ role: m.role, content: m.content })),
+    //chat_history: options.messages.map(m => ({ role: m.role, content: m.content })),
+    chat_history: pfHistory,
     app_name: appName
   }),
   signal: abortSignal
