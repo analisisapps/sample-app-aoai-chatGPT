@@ -56,10 +56,10 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
     });*/
 
   // Truncamiento del historial
-  const MAX_TURNS = 6; // últimos 6 turnos completos (user + assistant)
+  //const MAX_TURNS = 6; // últimos 6 turnos completos (user + assistant)
 
   // Tomar solo los últimos mensajes posibles
-  const recentMessages = options.messages.slice(-MAX_TURNS * 2);
+  //const recentMessages = options.messages.slice(-MAX_TURNS * 2);
   
   /* Simple proxy workaround*/
   console.log('Historial a enviar...:', options.messages);
