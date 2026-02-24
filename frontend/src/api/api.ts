@@ -129,8 +129,8 @@ for (let i = 0; i < options.messages.length - 1; i++) {
   // Solo procesamos si es un par user + assistant
   if (current.role === 'user' && next && next.role === 'assistant') {
     pfHistory.push({
-      inputs: { chat_input: current.content.trim() },
-      outputs: { chat_output: next.content.trim() }
+      inputs: { chat_input: current.content() },
+      outputs: { chat_output: next.content() }
     });
     i++; // saltamos al siguiente par (avanzamos 2)
   }
@@ -138,7 +138,7 @@ for (let i = 0; i < options.messages.length - 1; i++) {
 
 // El último mensaje (user actual) queda solo en chat_input
 const userMessage = options.messages.length > 0 && options.messages[options.messages.length - 1].role === 'user'
-  ? options.messages[options.messages.length - 1].content.trim()
+  ? options.messages[options.messages.length - 1].content()
   : '';
 
 // Log para debug
